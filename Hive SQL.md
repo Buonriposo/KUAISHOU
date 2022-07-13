@@ -31,3 +31,7 @@ substring('abcde', 3, 2) -- 'cd'
 ```sql
 instr(string str, string substr) -- 返回字符串substr在str中首次出现的位置
 locate(string substr, string str[, int pos]) -- 从pos位置开始查找字符串substr在str中首次出现的位置
+
+Example:
+instr('abcde', 'de') -- 4
+locate('
