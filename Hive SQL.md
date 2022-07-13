@@ -25,3 +25,9 @@ substring(string A, int start, int len) 返回值：string
 Example:
 substr('abcde', 3, 2) -- 'cd'
 substring('abcde', 3, 2) -- 'cd'
+```
+
+3. 字符串查找函数instr、locate
+```sql
+instr(string str, string substr) -- 返回字符串substr在str中首次出现的位置
+locate(string substr, string str[, int pos]) -- 从pos位置开始查找字符串substr在str中首次出现的位置
