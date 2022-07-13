@@ -18,4 +18,10 @@ concat_ws(',', 'yue1', null, 'yue2') -- yue1,yue2
 
 2. 字符串截取函数substr和substring
 
-语法：substr(
+```sql
+substr(string A, int start, int len) 返回值：string
+substring(string A, int start, int len) 返回值：string
+
+Example:
+substr('abcde', 3, 2) -- 'cd'
+substring('abcde', 3, 2) -- 'cd'
