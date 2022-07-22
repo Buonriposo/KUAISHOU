@@ -62,5 +62,50 @@ select rtrim(' abc ') -- ' abc' 去右边空格
 
 7. 替换函数replace
 ```sql
-replace(strA, strB, strC) -- 
-select replace('football', ''
+replace(strA, strB, strC) -- 将字符串A中B的部分换成C
+select replace('football', 'o', 'a') -- 'faatball'
+```
+
+8. json解析函数get_json_object
+```sql
+get_json_object(json_string, path) -- 解析json的字符串json_string,返回path指定的内容；如果输入的json字符串无效或是path不在json字符串中，那么返回 NULL
+
+Example:
+select get_json_object('{devide_info':{'device_id':'AB32EF4','device_name':'yue'}, 'age':23}', '$.device_info') -- {'device_id':'AB32EF4','device_name':'yue'}
+select get_json_object('{devide_info':{'device_id':'AB32EF4','device_name':'yue'}, 'age':23}', '$.device_info.device_id') -- 'AB32EF4'
+select get_json_object('{"device_info":{"device_id":{"device_iid":"AB32EF4", "device_iname":"yue"},"brand":"ios"},"age":28}','$.device_info.device_id.device_iid') -- 'AB32EF4'
+```
+
+9. 空格字符串函数space
+```sql
+space(n) -- 返回长度为n的全是空的字符串
+
+Example:
+select space(10) -- ''
+select length(space(10)) -- 10
+```
+
+10. 重复字符串函数repeat
+```sql
+select repeat('yue', 3) -- 'yueyueyue'
+```
+
+11. 补足函数lpad, rpad
+```sql
+lpad(str, len, pad) -- 将str用pad左补充至长度为10；注意这里并不是一股脑地把pad全都补充进去，而是一个一个，所以如果长度已经不够将pad整体补充进去，那么从第一个字符开始补充
+
+Example:
+rpad('abc', 10, 'td') -- 'abctdtdtdt'
+```
+
+12. 分割字符串函数split
+```sql
+split(str, pad) --用pad字符分割str字符串，返回分割后的字符串数组。如果pad为''，那么将str切分为长度为1的若干字符，并最后加一个空字符''，组成数组；如果pad不在str中，那么将会把str直接转化成array数组
+
+Example:
+select split('abc,def', ',') -- ['abc', 'def']
+select split('abc,def', '') -- ['a', 'b', 'c', ',', 'd', 'e', 'f', '']
+select split('abc,def', '-') -- ['abc,def']
+```
+
+13. 
