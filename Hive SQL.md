@@ -251,4 +251,42 @@ select sort_array(array(1,4,3,6,2)) -- [1,2,3,4,6]
 ```
 
 #### 1.3.3 复合类型使用示例
-详见
+详见：复合类型使用示例.md
+
+### 1.4 类型转换函数
+1. 基础类型之间强制转换：cast
+```sql
+cast(expr as <type>) -- 将expr转化成<type>类型
+
+Example:
+select cast('1' as double) -- 1.0
+select cast('198' as bigint) -- 198
+```
+
+2. 其他方式
+```sql
+select 
+  bigint('123.33') -- 123
+  double('123.33') -- 123.33
+  string(123.33) -- '123.33'
+```
+
+### 1.5 其他函数
+1. 返回最大、最小值：greatest、least
+```sql
+select greatest(1, 2, 3, 0.5, 2.5) -- 3 
+select least(1, 2, 3, 0.5, 2.5) -- 0.5 
+```
+
+2. 从开始位置比对两个字符串的不同字符数：levenshtein(string A, string B)
+```sql
+select levenshtein('kitten', 'sitting') -- 3
+select levenshtein('zhaoge', 'zhangsan') -- 4
+select levenshtein('zhaoge', 'zjx') -- 5
+```
+
+## 二、条件函数(if, case when, nvl, coalesce)
+### 2.1 if函数
+
+
+
