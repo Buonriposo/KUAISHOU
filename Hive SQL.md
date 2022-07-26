@@ -287,6 +287,56 @@ select levenshtein('zhaoge', 'zjx') -- 5
 
 ## 二、条件函数(if, case when, nvl, coalesce)
 ### 2.1 if函数
+```sql
+if(boolean testCondition, T valueTrue, T valueFalseOrNull) -- 返回值：T
 
+Example:
+select if(1=2,100,200) -- 200
+select if(1=1,100,200) -- 100
+
+-- 可以嵌套使用，但不如case when函数清晰可读
+select if(1=2,100,if(1=1,200,500)) -- 200
+```
+
+### 2.2 非空查找函数：COALESCE
+```sql
+COALESCE(T v1, T v2) -- 返回参数中第一个非空值，如果都为NULL，那么返回NULL
+
+Example:
+select coalesce(1, '200', 'yue') -- 1
+select coalesce(null, '100', '50') -- '100'
+```
+
+### 2.3 非空替换函数：nvl
+```sql
+nvl(T v1, T v2) -- 如果v1为NULL，则返回v2，否则返回v1
+
+Example:
+select nvl('yue', 100) --'yue'
+select nvl(null, '100') -- '100'
+```
+
+## 三、统计函数(UDAF，多行合并一行)
+### 3.1 个数统计函数：count
+```sql
+count(*) -- 统计检索出来的行数，包括NULL的行
+count(expr) -- 返回指定字段的非空值的个数
+count(distinct expr) -- 返回指定字段的不同的非空值的个数
+```
+
+### 3.2 分位数函数：percentile、percentile_approx
+```sql
+percentile(bigint col, p) -- 求准确的第pth个百位分数，但col字段只支持整数，不支持浮点数类型
+percentile(bigint col, array(p1 [,p2]...)) -- 功能与上述类似，后面可以输入多个百分位数，返回类型为array<double>
+
+percentile_approx(double col, p[,B]) -- 功能与上述类似，但是col字段支持浮点类型。参数B控制内存消耗的近似精度，B越大结果的准确度越高，默认为10000，当col字段中distinct值的个数小于B时，结果为准确的百分位数
+percentile_approx(double col, array(p1 [,p2]...)[,B]) -- 功能与上述类似，后面可以输入多个百分位数，返回类型为array<double>
+```
+
+### 3.3 集合函数：collect_set、collect_list
+```sql
+collect_set(col) -- 将col字段进行去重，合并成一个数组
+collect_list(col) -- 将col字段合并成一个数组，不去重
+```
 
 
