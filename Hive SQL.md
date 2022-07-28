@@ -339,4 +339,31 @@ collect_set(col) -- 将col字段进行去重，合并成一个数组
 collect_list(col) -- 将col字段合并成一个数组，不去重
 ```
 
+## 四、表格生成函数(UDTF，一行拆分多行)
+### 4.1 数组拆分成多行：explode
+```sql
+select explode(array(1,2,3)) 
+val
+1
+2
+3
+```
+
+### 4.2 数组拆分成多行带下标pos：posexplode
+```sql
+select posexplode(array(1,2,3))
+pos val
+0 1
+1 2
+2 3
+```
+
+### 4.3 Map拆分成多行：explode
+```sql
+select explode(map('k1', 'v1', 'k2', 'v2'))
+key value
+k1 v1
+k2 v2
+```
+
 
