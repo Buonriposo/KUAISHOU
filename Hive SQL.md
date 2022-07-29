@@ -389,3 +389,89 @@ cume_dist() -- 计算窗口内小于（或大于）等于当前值的数据排�
 ```
 
 ### 5.3 行函数
+1. lag 用于统计窗口往上第n行值
+```sql
+lag(col, n, default)
+第一个参数为列名
+第二个参数为往上第n行（可选，n > 0，默认为1）
+第三个参数为默认值（当往上第n行为null的时候，取默认值，如不指定，则为null）
+```
+
+2. lead 用于统计窗口往下第n行值【与lag函数over窗口内字段排序相反结果等同】
+```sql
+lead(col, n, default)
+第一个参数为列名
+第二个参数为往下第n行（可选，n > 0，默认为1）
+第三个参数为默认值（当往下第n行为null的时候，取默认值，如不指定，则为null）
+```
+
+3. first_value(col) 取分组内排序后，截止到当前行，第一个值
+4. last_value(col) 取分组内排序后，截止到当前行，最后一个值
+```sql
+select
+  f.user_id,
+  f.dt,
+  f.view_cnt,
+  lag(f.dt, 1, '') over (partition by f.user_id order by f.dt) as pre_dt,
+  lag(f.dt, 1, '') over (partition by f.user_id order by f.dt desc) as next_dt,
+  lead(f.dt, 1, '') over (partition by f.user_id order by f.dt) as next_dt2, -- 和上面next_dt一样
+  first_value(f.dt) over (partition by f.user_id order by f.dt) as first_dt
+from 
+  (
+    select
+      f.user_id,
+      f.dt,
+      sum(f.view_cnt) as view_cnt
+    from 
+      ... as f
+  ) f 
+order by 
+  f.user_id,
+  f.dt
+```
+### 5.4 分组聚合函数
+详见分组聚合函数
+
+## 六、应用实例
+1. 用户连续登录最大天数（row_number构造唯一分组key）
+构造模型如下，首选保证加工后的结果集user_id, login_date是唯一记录，通过user_id分组，计算出登录序号，然后通过登录日期与序号相减得出用户分组唯一标识datesub_rn，然后根据datesub_rn分组计算出用户连续登录最大天数，最后计算出用户连续登录最大天数，也可以通过最大天数过滤查询出符合需求的用户
+```sql
+user_id,login_date,rn,datesub_rn
+
+1001,2020-01-02,1,2020-01-01
+
+1001,2020-01-03,2,2020-01-01
+
+1001,2020-01-04,3,2020-01-01
+
+1004,2020-01-06,1,2020-01-05
+
+1004,2020-01-07,1,2020-01-05
+
+1005,2020-01-07,1,2020-01-06
+
+select
+  f.user_id,
+  max(f.continuous_days) as max_days
+from
+  (
+    select
+      f.user_id,
+      f.datesub_rn,
+      count(1) as continuous_days
+    from
+      (
+        select
+          f.user_id,
+          f.dt as login_date,
+          row_number() over(partition by f.user_id order by f.dt) as rn,
+          date_dub(f.dt, row_number() over(partition by f.user_id order by f.dt)) as datesub_rn
+        from ... as f
+      ) f
+     group by 
+      f.user_id,
+      f.datesub_rn
+  ) f
+group by 
+  f.user_id
+```
