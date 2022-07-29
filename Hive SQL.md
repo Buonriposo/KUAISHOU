@@ -366,4 +366,26 @@ k1 v1
 k2 v2
 ```
 
+## 五、开窗函数
+### 5.1 ntile
+```sql
+ntile(n) -- 用于将分组数据按照顺序切分成n片，返回当前切片值，如果切片不均匀，默认增加第一个切片的分布
 
+Example:
+select 
+  user_id,
+  city_id,
+  dt,
+  view_cnt,
+  ntile(2) over(partition by city_id order by view_cnt, user_id) as ntile2,
+  ntile(3) over(partition by city_id order by view_cnt, user_id) as ntile3
+from ...
+```
+
+### 5.2 排名占比函数
+```sql
+percent_rank() -- 计算窗口内数据rank值排名占比，范围在[0,1]
+cume_dist() -- 计算窗口内小于（或大于）等于当前值的数据排名占比
+```
+
+### 5.3 行函数
