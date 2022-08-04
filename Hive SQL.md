@@ -179,6 +179,48 @@ Example:
 select date_add('2022-07-23 17:43:45', 10) -- 2022-08-02
 ```
 
+8. 日期之间转换格式：date_format
+```sql
+select date_format('2022-07-23 17:43:45', 'yyyyMMdd') -- 20220723
+select date_format('2022-07-23 17:43:45.123', 'yyyy-MM-dd') -- 2022-07-23
+```
+
+9. 月份差：months_between
+```sql
+select months_between('2022-08-03', '2022-07-01') -- 1.06451613 这里的小数是按天数占月份的比值得到的，可以自行取整
+select round(months_between('2022-08-03', '2022-07-01')) -- 1
+```
+
+10. 返回特定日期：next_day、trunc、last_day
+```sql
+next_day(date, format) -- 返回date日期下个星期几的日期，format：星期的英文缩写或全拼
+trunc(date, 'MM') -- 返回日期当月第一天
+trunc(date, 'YEAR') -- 返回日期当年第一天
+last_day(date) -- 返回日期当月最后一天
+
+Example:
+select next_day('2022-07-15', 'mon') -- 2022-07-18
+select next_day('2022-07-15', 'tue') -- 2022-07-19
+select trunc('2022-07-15', 'MM') -- 2022-07-01
+select last_day('2022-07-15') -- 2022-07-31
+select trunc('2022-07-15', 'YEAR') -- 2022-01-01
+```
+
+11. 判断今天是周几
+```sql
+select
+  case 
+    when pmod(datediff(current_date(),'2018-01-01') + 1,7) = 1 then '周一'
+    when pmod(datediff(current_date(),'2018-01-01') + 1,7) = 2 then '周二'
+    when pmod(datediff(current_date(),'2018-01-01') + 1,7) = 3 then '周三'
+    when pmod(datediff(current_date(),'2018-01-01') + 1,7) = 4 then '周四'
+    when pmod(datediff(current_date(),'2018-01-01') + 1,7) = 5 then '周五'
+    when pmod(datediff(current_date(),'2018-01-01') + 1,7) = 6 then '周六'
+	  else '周日'
+	end as week_day
+```
+
+
 ### 1.3 复合类型函数(array, map, struct)
 #### 1.3.1 复合类型构造
 1. map结构
