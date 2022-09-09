@@ -1,7 +1,7 @@
 -----4-6月活动新回作者中23-作者占比
 select
   activity_name,
-	p_date,
+  p_date,
   count(if(is_new_huiliu = 1, author_id, null)) hd_new_huiliu_cnt,
   count(if(is_new_photo_author = 1, author_id, null)) hd_new_author_cnt,
   count(if(is_new_huiliu = 1 and age <= 23, author_id, null)) hd_23_new_huiliu_cnt,
@@ -28,7 +28,7 @@ from
           author_id,
           dt2pdate(upload_dt)
       ) a
-      left join (
+    left join (
         select
           p_date,
           user_id,
